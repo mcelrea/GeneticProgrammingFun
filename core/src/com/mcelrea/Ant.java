@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.awt.*;
-
 public class Ant implements Comparable<Ant> {
     private Color color;
     private int x, y;
@@ -42,7 +40,7 @@ public class Ant implements Comparable<Ant> {
         this.y = parent1.initialY;
         initialY = y;
         this.speed = Math.random() < 0.5 ? parent1.speed : parent2.speed;
-        this.radius = parent1.radius;
+        this.radius = 4;
         hitBox = new Rectangle(x-radius,y-radius,radius*2,radius*2);
         direction = parent1.initialDirection;
         initialDirection = direction;
@@ -60,7 +58,7 @@ public class Ant implements Comparable<Ant> {
     }
 
     private void mutateDNA() {
-        int mutationChance = 75; //7.5% chance
+        int mutationChance = 40; //4% chance
 
         for(int i=0; i < dna.length; i++) {
             int randNum = (int)(1 + Math.random() * 1000);
@@ -83,6 +81,8 @@ public class Ant implements Comparable<Ant> {
         this.y = initialY;
         this.direction = initialDirection;
         this.score = 0;
+        antHasFood = false; //we added this on Tuesday, May 4th
+        this.radius = 4;
     }
 
     public int getScore() {
@@ -103,7 +103,8 @@ public class Ant implements Comparable<Ant> {
 
         if(antHasFood) {
             double scoreToAdd = Math.abs(Math.sqrt(Math.pow(middleX-x,2) + Math.pow(middleY-y,2)));
-            score += 5000 - (int)scoreToAdd;
+            if(score > 0) //silly check to make sure score doesn't go negative
+                score += 5000 - (int)scoreToAdd;
         }
     }
 
@@ -177,5 +178,9 @@ public class Ant implements Comparable<Ant> {
     @Override
     public int compareTo(Ant o) {
         return this.score - o.score;
+    }
+
+    public void setRadius(int radius) {
+        this.radius = radius;
     }
 }
